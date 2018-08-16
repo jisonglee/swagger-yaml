@@ -1148,20 +1148,6 @@ definitions:
         type: string
         example: '2018-08-01T00:00:00+0900'
         description: 오더 생성 날짜
-  State: 
-    type: object
-    required: 
-      - stateId
-      - stateNm
-    properties:
-      stateId: 
-        type: string
-        example: 'icnc'
-        description: State 아이디
-      stateNm:
-        type: string
-        example: 'ICNC'
-        description: State 이름
   OrderId:
     type: object
     required: 
