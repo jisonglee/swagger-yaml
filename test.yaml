@@ -1,0 +1,62 @@
+post:
+  tags: 
+  - User
+  summary: Add User
+  parameters:
+  - in: body
+    name: Body
+    description: User info
+    required: true
+    schema:
+      $ref: '#/definitions/UserInfo'
+  responses:
+    200:
+      description: Operation result
+      schema:
+        type: object
+        properties:
+          result:
+            $ref: '#/definitions/ResultSuccess'
+definitions:
+  UserInfo:
+    type: object
+    properties:
+      userId :
+        type: string
+        example: "user1"
+        description: user id
+      userPw :
+        type: string
+        example: "password"
+        description: user password
+      userName:
+        type: string
+        example: "Staff name"
+      phoneNo:
+        type: string
+        example: "70111234"
+      status:
+        type: string
+        example: "A"
+        description: "A: Active"
+      roleId:
+        type: string
+        example: "100,101"
+      grpId:
+        type: string
+        example: 100
+        
+  ResultSuccess:
+    type: object
+    required: 
+      - code
+      - desc
+    properties:
+      code :
+        type: integer
+        example: 0
+        description: 응답 코드
+      desc :
+        type: string
+        example: Ok
+        description: 코드 부연 설명        
