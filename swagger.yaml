@@ -548,7 +548,7 @@ paths:
   /api/v1/order:
     $ref: 'https://api.swaggerhub.com/domains/jisonglee/order/1.0.0#/pathitems/OrderList'
   /api/v1/order/state:
-    $ref: 'https://api.swaggerhub.com/domains/jisonglee/order/1.0.0#/pathitems/OrderState''
+    $ref: 'https://api.swaggerhub.com/domains/jisonglee/order/1.0.0#/pathitems/OrderState'
   /api/v1/order/new:
     get:
       tags:
