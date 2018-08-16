@@ -1,0 +1,2111 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: API Document
+  description: |
+    [ 참고 ] 
+    Required 표시된 Array 타입의 파라미터 경우 빈 배열을 반환하거나 받을 수 있습니다.
+  contact:
+    email: jisonglee@uangel.com
+host: virtserver.swaggerhub.com
+basePath: /jisonglee/APIs/1.0.0
+tags:
+- name: Resource
+  description: 자원 관리 API
+- name: Login
+  description: Login 관련 API
+- name: User
+  description: User와 관련된 처리를 하는 API
+- name: Order
+  description: Order와 관련된 처리를 하는 API
+# schemes:
+#  - http
+paths:
+  /api/v1/auth/user:
+    post:
+      tags: 
+      - User
+      summary: Add User
+      parameters:
+      - in: body
+        name: Body
+        description: User info
+        required: true
+        schema:
+          $ref: '#/definitions/UserInfo'
+      responses:
+        200:
+          description: Operation result
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/ResultSuccess'
+    get:
+      tags: 
+      - User
+      summary: Search User
+      parameters:
+      - in: query
+        name: id
+        description: User ID
+        type: string
+      - in: query
+        name: name
+        description: User Name
+        type: string
+      - in: query
+        name: group
+        description: Group Name
+        type: string
+      responses:
+        200:
+          description: Operation result
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/ResultSuccess'
+              objects:
+                type: array
+                items:
+                  $ref: '#/definitions/UserInfo'
+  /api/v1/auth/user/{userId}:
+    put:
+      tags: 
+      - User
+      summary: Update User
+      parameters:
+      - in: path
+        name: userId
+        description: User Id
+        required: true
+        type: string
+      - in: body
+        name: Body
+        description: User info (userName, phoneNo, status, grpId 만 수정 가능)
+        required: true
+        schema:
+          $ref: '#/definitions/UserInfo'
+      responses:
+        200:
+          description: Operation result
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/ResultSuccess'
+    delete:
+      tags: 
+      - User
+      summary: Delete User
+      parameters:
+      - in: path
+        name: userId
+        description: User Id
+        required: true
+        type: string
+      responses:
+        200:
+          description: Operation result
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/ResultSuccess'
+    get:
+      tags: 
+      - User
+      summary: Search User
+      parameters:
+      - in: path
+        name: userId
+        description: User Id
+        required: true
+        type: string              
+      responses:
+        200:
+          description: Operation result
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/ResultSuccess'
+              objects:
+                type: array
+                items:
+                  $ref: '#/definitions/UserInfo'
+                  
+  /api/v1/auth/group:
+    post:
+      tags: 
+      - User
+      summary: Add Group
+      parameters:
+      - in: body
+        name: Body
+        description: User info
+        required: true
+        schema:
+          $ref: '#/definitions/GroupInfo'
+      responses:
+        200:
+          description: Operation result
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/ResultSuccess'
+    get:
+      tags: 
+      - User
+      summary: Search Group
+      parameters:
+      - in: query
+        name: name
+        description: Group Name
+        type: string
+      - in: query
+        name: tree
+        description: Root Group Id. 해당 그룹의 모든 하위 그룹을 찾는다. 
+        type: string
+      responses:
+        200:
+          description: Operation result
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/ResultSuccess'
+              objects:
+                type: array
+                items:
+                  $ref: '#/definitions/GroupInfo'
+  /api/v1/auth/group/{grpId}:
+    put:
+      tags: 
+      - User
+      summary: Update Group
+      parameters:
+      - in: path
+        name: grpId
+        description: Group Id
+        required: true
+        type: string
+      - in: body
+        name: Body
+        description: Group info (groupName, status, upperGrpId 만 수정 가능)
+        required: true
+        schema:
+          $ref: '#/definitions/GroupInfo'
+      responses:
+        200:
+          description: Operation result
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/ResultSuccess'
+    delete:
+      tags: 
+      - User
+      summary: Delete Group
+      parameters:
+      - in: path
+        name: grpId
+        description: Group Id
+        required: true
+        type: string
+      responses:
+        200:
+          description: Operation result
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/ResultSuccess'
+    get:
+      tags: 
+      - User
+      summary: Search Group
+      parameters:
+      - in: path
+        name: grpId
+        description: Group Id
+        required: true
+        type: string              
+      responses:
+        200:
+          description: Operation result
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/ResultSuccess'
+              objects:
+                type: array
+                items:
+                  $ref: '#/definitions/GroupInfo'                  
+  /api/v1/auth/login:
+    post:
+      tags: 
+      - Login
+      summary: Login request
+      parameters:
+      - in: body
+        name: Body
+        description: id & password
+        required: true
+        schema:
+          $ref: '#/definitions/Login'
+      responses:
+        200:
+          description: Access token
+          schema:
+            $ref: '#/definitions/LoginResponse'
+  
+  /api/v1/auth/refresh:
+    post:
+      tags: 
+      - Login
+      summary: Refresh access token
+      parameters:
+      - name : Authorization
+        in: header
+        description: Auth token
+        required: true
+        type: string
+        default: 
+      - in: body
+        name: Body
+        description: refresh token
+        required: true
+        schema:
+          $ref: '#/definitions/Refresh'
+      responses:
+        200:
+          description: Access Token
+          schema:
+            $ref: '#/definitions/ResultSuccess'                
+            
+  /api/v1/rsc/mdl/{modelId}:
+    get:
+      tags: 
+      - Resource
+      summary: Resource Model 조회
+      parameters:
+      - name: modelId
+        in: path
+        description: Model ID
+        required: true
+        type: string
+        default: None
+      responses:
+        200:
+          description: 모델 정보
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/ResultSuccess'
+              objects:
+                type: array
+                items:
+                  $ref: '#/definitions/ModelInfo'
+    delete:
+      tags: 
+      - Resource
+      summary: Resource Model 삭제
+      parameters:
+      - name: modelId
+        in: path
+        description: Model ID
+        required: true
+        type: string
+        default: None
+      responses:
+        200:
+          description: 모델 정보
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/ResultSuccess'
+    put:
+      tags: 
+      - Resource
+      summary: Resource Model 변경
+      parameters:
+      - name: modelId
+        in: path
+        description: Model ID
+        required: true
+        type: string
+        default: None
+      - in: body
+        name: Body
+        description: 변경할 모델 정보 (name, desc, price 변경 가능)
+        required: true
+        schema:
+          $ref: '#/definitions/ModelInfo'
+      responses:
+        200:
+          description: 모델 정보
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/ResultSuccess'
+  /api/v1/rsc/mdl:
+    post:
+      tags: 
+      - Resource
+      summary: Resource Model 추가 
+      parameters:
+      - in: body
+        name: Body
+        description: 모델 정보
+        required: true
+        schema:
+          $ref: '#/definitions/ModelInfo'
+      responses:
+        200:
+          description: 모델 정보
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/ResultSuccess'
+    
+    get:
+      tags: 
+      - Resource
+      summary: Resource Model 조회
+      parameters:
+      - name: id
+        in: query
+        description: Model ID
+        required: false
+        type: string
+        default: None
+      - name: name
+        in: query
+        description: Model Name
+        required: false
+        type: string
+        default: None
+      - name: class
+        in: query
+        description: Model Class Name
+        required: false
+        type: string
+        default: None
+      - name: domain
+        in: query
+        description: Class domain
+        required: false
+        type: number
+        default: None
+      responses:
+        200:
+          description: id, name으로 검색된 모델 정보를 반환한다.
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/ResultSuccess'
+              objects:
+                type: array
+                items:
+                  $ref: '#/definitions/ModelInfo'
+              pagination:
+                $ref: '#/definitions/Page'
+  /api/v1/rsc/cls/{classId}:
+    get:
+      tags: 
+      - Resource
+      summary: Resource Class 조회
+      parameters:
+      - name: classId
+        in: path
+        description: Class ID
+        required: true
+        type: string
+        default: None
+      responses:
+        200:
+          description: 모델 클래스 정보
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/ResultSuccess'
+              objects:
+                type: array
+                items:
+                  $ref: '#/definitions/DevClassInfo'
+    delete:
+      tags: 
+      - Resource
+      summary: Resource Class 삭제
+      parameters:
+      - name: classId
+        in: path
+        description: Class ID
+        required: true
+        type: string
+        default: None
+      responses:
+        200:
+          description: 모델 클래스 정보
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/ResultSuccess'
+    put:
+      tags: 
+      - Resource
+      summary: Resource Class 변경
+      parameters:
+      - name: classId
+        in: path
+        description: Class ID
+        required: true
+        type: string
+        default: None
+      - in: body
+        name: Body
+        description: 모델 Class 정보 (name, desc 변경 가능)
+        required: true
+        schema:
+          $ref: '#/definitions/DevClassInfo'
+      responses:
+        200:
+          description: 모델 클래스 정보
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/ResultSuccess'
+  /api/v1/rsc/cls:
+    post:
+      tags: 
+      - Resource
+      summary: Resource class 추가 
+      parameters:
+      - in: body
+        name: Body
+        description: 모델 Class 정보
+        required: true
+        schema:
+          $ref: '#/definitions/DevClassInfo'
+      responses:
+        200:
+          description: 모델 Class 정보
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/ResultSuccess'
+    get:
+      tags: 
+      - Resource
+      summary: Resource Class 조회
+      parameters:
+      - name: id
+        in: query
+        description: Class ID
+        required: false
+        type: string
+        default: None
+      - name: name
+        in: query
+        description: Class Name
+        required: false
+        type: string
+        default: None
+      - name: domain
+        in: query
+        description: Domain
+        required: false
+        type: number
+        default: None
+      responses:
+        200:
+          description: id, name으로 검색된 device class 정보를 반환한다.
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/ResultSuccess'
+              objects:
+                type: array
+                items:
+                  $ref: '#/definitions/DevClassInfo'
+              pagination:
+                $ref: '#/definitions/Page'  
+  /api/v1/order:
+    get:
+      tags:
+      - Order
+      summary: 오더 리스트 조회
+      description: |
+        오더 리스트를 조회한다.
+        <br />
+        접근권한이 OrdMgrOp R 이하인 경우 본인 혹은 그룹에 할당된 오더만 조회 가능하다.
+      produces: 
+      - application/json
+      parameters: 
+      - name: Content-Type
+        in: header
+        description: content type
+        required: true
+        type: string
+        default: application/json
+      - name : Authorization
+        in: header
+        description: Auth token
+        required: true
+        type: string
+        default: 
+      - name : orderId
+        in : query
+        description: |
+          오더 아이디
+          Col : NUMBER(10)
+        required: false
+        type: string
+        default: 1
+      - name : custId
+        in : query
+        description: |
+          고객 아이디
+          Col : VARCHAR2(15)
+          **접근 권한: OrdOp R 이상**
+        required: false
+        type: string
+        default: 1
+      - name : custName
+        in : query
+        description: |
+          고객 이름
+          Col : VARCHAR2(180)
+          **접근 권한: OrdOp R 이상**
+        required: false
+        type: string
+        default: cust1
+      - name : contactNum
+        in : query
+        description: |
+          고객 연락처
+          Col : VARCHAR2(300)
+        required: false
+        type: string
+        default: 77430001
+      - name : personalId
+        in : query
+        description: |
+          고객 등록식별번호(Registration Identity Number)
+           Col : VARCHAR2(15)
+          **접근 권한: OrdOp R 이상**
+        required: false
+        type: string
+        default: 1
+      - name : addNum
+        in : query
+        description: |
+          고객 주소 번호.
+          여러 개일 경우 ,로 구분하여 보낸다.
+          Col : NUMBER(8)
+        required: false
+        type: string
+        default: '1,2,3'
+      - name : address
+        in : query
+        description: |
+          고객 주소
+          Col : VARCHAR2(600)
+        required: false
+        type: string
+        default: 1
+      - name : operation
+        in : query
+        description: |
+          오더 오퍼레이션 아이디
+          Col : VARCHAR2(15)
+          **접근 권한: OrdOp R 이상**
+        required: false
+        type: string
+        default: new_sub
+      - name: subdomain
+        in : query
+        description: |
+          서브 도메인 아이디
+          Col : VARCHAR2(30)
+        required: false
+        type: string
+        default: adsl
+      - name: crteFrom
+        in : query
+        description: |
+          오더 생성 날짜 범위 시작
+        required: false
+        type: string
+        default: '2018-08-01T00:00:00'
+      - name: crteTo
+        in : query
+        description: |
+          오더 생성 날짜 범위 끝
+        required: false
+        type: string
+        default: '2018-08-021T00:00:00'
+      - name: assignee
+        in : query
+        description: |
+          오더 현 담당 직원 아이디
+          Col : VARCHAR2(30)
+          **접근 권한: OrdMgrOp R 이상**
+        required: false
+        type: string
+        default: staff_1
+      - name: state
+        in : query
+        description: |
+          오더 현재 State 아이디
+          Col : VARCHAR2(15)
+          **접근 권한: OrdMgrOp R 이상**
+        required: false
+        type: string
+        default: mtc_mdf
+      - name: result
+        in : query
+        description: |
+          오더 처리 결과
+          **접근 권한: OrdMgrOp R 이상**
+        required: false
+        type: string
+        default: success
+        enum:
+        - success
+        - cancel
+      responses:
+        200:
+          description: 오더 리스트
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/ResultSuccess'
+              objects:
+                type: array
+                items:
+                  $ref: '#/definitions/OrderList'
+  /api/v1/order/state:
+    get:
+      tags:
+        - Order
+      summary: '오더 State 리스트 조회'
+      description: |
+        오더 State 리스트를 조회한다.
+        <br />
+        **접근 권한: OrdMgrOp R 이상**
+      produces: 
+      - application/json
+      parameters: 
+      - name: Content-Type
+        in: header
+        description: content type
+        required: true
+        type: string
+        default: application/json
+      - name : Authorization
+        in: header
+        description: Auth token
+        required: true
+        type: string
+        default: 
+      responses:
+        200:
+          description: 오더 리스트
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/ResultSuccess'
+              objects:
+                type: array
+                items:
+                  $ref: '#/definitions/State'
+  /api/v1/order/new:
+    get:
+      tags:
+        - Order
+      summary: 새 오더 아이디 할당
+      description: |
+        오더 생성을 위해 새 오더 아이디를 할당받는다.
+        <br />
+        **접근 권한: OrdOp W 이상**
+      produces: 
+      - application/json
+      parameters: 
+      - name: Content-Type
+        in: header
+        description: content type
+        required: true
+        type: string
+        default: application/json
+      - name : Authorization
+        in: header
+        description: Auth token
+        required: true
+        type: string
+        default: 
+      responses:
+        200:
+          description: 새 오더 아이디
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/ResultSuccess'
+              objects:
+                type: array
+                items:
+                  $ref: '#/definitions/OrderId'
+  /api/v1/order/op:
+    get:
+      tags:
+        - Order
+      summary: 오더 오퍼레이션 리스트 조회
+      description: |
+        오더 오퍼레이션 리스트를 조회한다.
+        <br />
+        **접근 권한: OrdOp R 이상**
+      produces: 
+      - application/json
+      parameters: 
+      - name: Content-Type
+        in: header
+        description: content type
+        required: true
+        type: string
+        default: application/json
+      - name : Authorization
+        in: header
+        description: Auth token
+        required: true
+        type: string
+        default: 
+      responses:
+        200:
+          description: 오퍼레이션 리스트
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/ResultSuccess'
+              objects:
+                type: array
+                items:
+                  $ref: '#/definitions/Operation'
+  /api/v1/order/{orderId}:
+    post:
+      tags:
+        - Order
+      summary: 오더 등록
+      description: |
+        오더를 새로 등록한다.
+        <br />
+        **접근 권한: OrdOp W 이상**
+      produces:
+      - application/json
+      parameters:
+      - name: Content-Type
+        in: header
+        description: content type
+        required: true
+        type: string
+        default: application/json
+      - name: Authorization
+        in: header
+        description: Auth token
+        required: true
+        type: string
+        default: 
+      - name: orderId
+        in: path
+        description: Order ID
+        required: true
+        type: string
+        default: '1'
+        format: long
+      - in: body
+        name: Body
+        description: 오더 생성에 필요한 정보
+        required: true
+        schema:
+          $ref: '#/definitions/CreateOrder'
+      responses:
+        200:
+          description: 오더 정상 등록
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/ResultSuccess'
+    get:
+      tags:
+        - Order
+      summary: '오더 조회'
+      description: |
+        등록된 오더를 조회한다.
+        <br />
+        접근권한이 OrdMgrOp R 이하인 경우 본인 혹은 그룹에 할당된 오더만 조회 가능하다.
+      produces: 
+      - application/json
+      parameters: 
+      - name: Content-Type
+        in: header
+        description: content type
+        required: true
+        type: string
+        default: application/json
+      - name : Authorization
+        in: header
+        description: Auth token
+        required: true
+        type: string
+        default: 
+      - name: orderId
+        in: path
+        description: Order ID
+        required: true
+        type: string
+        default: '1'
+        format: long
+      responses:
+        200:
+          description: 오더 정보
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/ResultSuccess'
+              objects:
+                type: array
+                items:
+                  $ref: '#/definitions/Order'
+    put:
+      tags:
+        - Order
+      summary: '오더 수정'
+      description: |
+        등록된 오더의 일부 정보를 수정한다.
+        <br/>
+        자신에게 할당된 오더만 수정 가능하다.
+        생성(Created) 이후 State에서는 Suborder의 Progress 정보만 수정한다.
+      produces: 
+      - application/json
+      parameters: 
+      - name: Content-Type
+        in: header
+        description: content type
+        required: true
+        type: string
+        default: application/json
+      - name : Authorization
+        in: header
+        description: Auth token
+        required: true
+        type: string
+        default: 
+      - name: orderId
+        in: path
+        description: Order ID
+        required: true
+        type: string
+        default: '1'
+        format: long
+      - in: body
+        name: Body
+        description: 오더 생성에 필요한 정보
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateOrder'
+      responses:
+        200:
+          description: 오더 정상 수정
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/ResultSuccess'
+                
+  /api/v1/order/{orderId}/state:
+    put:
+      tags:
+        - Order
+      summary: '오더 State 변경'
+      description: |
+        오더 action 값에 따라 등록된 오더의 State를 변경한다.
+        <br/>
+        자신에게 할당된 오더만 가능하다.
+      produces: 
+      - application/json
+      parameters: 
+      - name: Content-Type
+        in: header
+        description: content type
+        required: true
+        type: string
+        default: application/json
+      - name : Authorization
+        in: header
+        description: Auth token
+        required: true
+        type: string
+        default: 
+      - name: orderId
+        in: path
+        description: Order ID
+        required: true
+        type: string
+        default: '1'
+        format: long
+      - in: body
+        name: Body
+        description: 오더 생성에 필요한 정보
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateState'
+      responses:
+        200:
+          description: 오더 정상 수정
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/ResultSuccess'
+  /api/v1/order/{orderId}/assignee:
+    put:
+      tags:
+        - Order
+      summary: '오더 할당'
+      description: |
+        등록된 오더를 해당 직원 아이디로 할당한다.
+        <br/>
+        접근 권한이 OrdMgrOp R 이하인 경우 자신과 같은 그룹에 속한 직원에게만 할당 가능하다.
+      produces: 
+      - application/json
+      parameters: 
+      - name: Content-Type
+        in: header
+        description: content type
+        required: true
+        type: string
+        default: application/json
+      - name : Authorization
+        in: header
+        description: Auth token
+        required: true
+        type: string
+        default: 
+      - name: orderId
+        in: path
+        description: Order ID
+        required: true
+        type: string
+        default: '1'
+        format: long
+      - in: body
+        name: Body
+        description: 오더 생성에 필요한 정보
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateAssignee'
+      responses:
+        200:
+          description: 오더 정상 수정
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/ResultSuccess'
+  /api/v1/order/{orderId}/customer:
+    put:
+      tags:
+        - Order
+      summary: '오더 고객정보 수정'
+      description: |
+        등록된 오더의 고객 정보를 수정한다.
+        <br />
+        **접근 권한: OrdOp W 이상**
+      produces: 
+      - application/json
+      parameters: 
+      - name: Content-Type
+        in: header
+        description: content type
+        required: true
+        type: string
+        default: application/json
+      - name : Authorization
+        in: header
+        description: Auth token
+        required: true
+        type: string
+        default: 
+      - name: orderId
+        in: path
+        description: Order ID
+        required: true
+        type: string
+        default: '1'
+        format: long
+      - in: body
+        name: Body
+        description: 오더 생성에 필요한 정보
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateCustomer'
+      responses:
+        200:
+          description: 오더 리스트
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/ResultSuccess'
+  /api/v1/order/wf/tmpl:
+    get:
+      tags:
+        - Order
+      summary: '워크플로우 템플릿 리스트 조회'
+      description: |
+        워크플로우 템플릿 리스트를 조회한다.
+        <br />
+        **접근 권한: WorkFlowOp R 이상**
+      produces: 
+      - application/json
+      parameters: 
+      - name: Content-Type
+        in: header
+        description: content type
+        required: true
+        type: string
+        default: application/json
+      - name : Authorization
+        in: header
+        description: Auth token
+        required: true
+        type: string
+        default: 
+      responses:
+        200:
+          description: 워크플로우 템플릿 리스트
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/ResultSuccess'
+              objects:
+                type: array
+                items:
+                  $ref: '#/definitions/WorkflowTemplateList'
+                
+  /api/v1/order/wf/tmpl/{templateId}:
+    get:
+      tags:
+        - Order
+      summary: '워크플로우 템플릿 조회'
+      description: |
+        등록된 워크플로우 템플릿을 조회한다.
+        <br />
+        **접근 권한: WorkFlowOp R 이상**
+      produces: 
+      - application/json
+      parameters: 
+      - name: Content-Type
+        in: header
+        description: content type
+        required: true
+        type: string
+        default: application/json
+      - name : Authorization
+        in: header
+        description: Auth token
+        required: true
+        type: string
+        default:
+      - name: templateId
+        in: path
+        description: Template ID
+        required: true
+        type: string
+        default: 'template_1'
+      responses:
+        200:
+          description: 워크플로우 템플릿 정보
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/ResultSuccess'
+              objects:
+                type: array
+                items:
+                  $ref: '#/definitions/WorkflowTemplate'
+definitions:
+  Page:
+    description: Pagiation
+    properties:
+      page:
+        type: number
+        example: 1
+      nitem:
+        type: number
+        example: 10
+      total:
+        type: number
+        example: 101
+    
+  DevClassInfo:
+    description: 자원 Class 정보
+    required:
+      - classId
+    properties:
+      classId:
+        type: string
+        example: 'HGW'
+        description: |
+          모델 클래스 식별자
+          Col : VARCHAR2(30)
+      domain:
+        type: number
+        example: 5
+        description: |
+          서비스 도메인 (5:Telephony, 4:Internet, 3:CaTV)
+          Col : NUMBER(5)
+      desc:
+        type: string
+        example: 'Home Gateway'
+        description: |
+          모델 클래스에 대한 설명
+          Col : VARCHAR2(150)
+  ModelInfo:
+    description: 모델 정보
+    required:
+      - modelId
+      - classId
+    properties:
+      classId:
+        type: string
+        example: 'HGW'
+        description: |
+          모델 클래스 식별자
+          Col : VARCHAR2(30)
+      modelId:
+        type: string
+        example: 'HGW-256'
+        description: |
+          모델 식별자
+          Col : VARCHAR2(30)
+      name:
+        type: string
+        example: 'Home Gateway 256'
+        description: |
+          모델 이름
+          Col : VARCHAR2(30)
+      desc:
+        type: string
+        example: 'Huawei Home Gateway 256'
+        description: |
+          모델에 대한 설명
+          Col : VARCHAR2(150)
+      price:
+        type: object
+        properties:
+          orig:
+            type: number
+            example: 1000
+            description: 본래 가격
+          discount:
+            type: number
+            example: 500
+            description: 할인 금액 
+  CustomerInfo:
+    description: 고객 정보
+    required:
+      - contactNum
+    properties:
+      name:
+        type: string
+        example: ДООСМАА НАМЖИЛСYРЭНГИЙН
+        description: |
+          고객 이름
+          Col : VARCHAR2(180)
+      contactNum:
+        type: string
+        example: '77430001'
+        description: |
+          고객 연락처
+          Col : VARCHAR2(300)
+      custId:
+        type: string
+        example: '1'
+        description: |
+          고객 아이디
+          Col : VARCHAR2(15)
+      personalId:
+        type: string
+        example: '1'
+        description: |
+          고객 등록식별번호
+          Col : VARCHAR2(15)
+      addNum:
+        type: integer
+        example: 1
+        description: |
+          주소 번호
+          Col : NUMBER(8)
+      offclAddr:
+        type: string
+        example: 'Улаанбаатар Багануур horoo-1 horoolol-1 2-1 shangrila'
+        description: |
+          고객 공식 주소
+          Col : VARCHAR2(600)
+      unoffclAddr:
+        type: string
+        example: 'Улаанбаатар Багануур horoo-1 horoolol-1 2-1 shangrila'
+        description: |
+          고객 비공식 주소
+          Col : VARCHAR2(600)
+  ProductInfo:
+    type: object
+    description: 가입 상품 정보
+    required:
+      - prodId
+      - prodNm
+    properties:
+      prodId:
+        type: string
+        example: 'double_adsl_ngn'
+        description: |
+          상품 아이디
+      prodNm:
+        type: string
+        example: 'Double ADSL NGN'
+        description: 상품 이름
+  OrderList:
+    type: object
+    required:
+      - id
+      - stateNm
+      - assignee
+      - custInfo
+      - schedAt
+    properties:
+      id :
+        type: string
+        example: '1'
+        description: |
+          오더 아이디
+      operationNm:
+        type: string
+        example: New connection
+        description: |
+          오더 오퍼레이션 이름
+      stateNm:
+        type: string
+        example: Created
+        description: |
+          오더 현재 State 이름
+      assignee:
+        type: string
+        example: staff_1
+        description: |
+          오더 현 담당 직원 아이디
+      custInfo:
+        $ref: '#/definitions/CustomerInfo'
+      schedAt:
+        type: string
+        example: '2018-08-01T00:00:00+0900'
+        description: 오더 처리 완료 예정 날짜
+      crteAt:
+        type: string
+        example: '2018-08-01T00:00:00+0900'
+        description: 오더 생성 날짜
+  State: 
+    type: object
+    required: 
+      - stateId
+      - stateNm
+    properties:
+      stateId: 
+        type: string
+        example: 'icnc'
+        description: State 아이디
+      stateNm:
+        type: string
+        example: 'ICNC'
+        description: State 이름
+  OrderId:
+    type: object
+    required: 
+      - newId
+    properties:
+      newId:
+        type: string
+        example: '2'
+        description: 새 오더 아이디
+  Operation:
+    type: object
+    required: 
+      - operationId
+      - operationNm
+      - supportedSubdomain
+    properties:
+      operationId:
+        type: string
+        example: 'new_conn'
+        description: 오더 오퍼레이션 아이디
+      operationNm:
+        type: string
+        example: 'New Connection'
+        description: 오더 오퍼레이션 이름
+      supportedSubdomain:
+        type: array
+        description: 해당 오퍼레이션 지원되는 서브도메인
+        items:
+          $ref: '#/definitions/SupportedSubdomain'
+  SupportedSubdomain:
+    type: object
+    required: 
+      - subdomainId
+      - subdomainNm
+      - domainId
+      - domainNm
+    properties:
+      subdomainId:
+        type: integer
+        example: 501
+        description: 서브도메인 아이디
+      subdomainNm:
+        type: string
+        example: 'ADSL'
+        description: 서브도메인 이름
+      domainId:
+        type: integer
+        example: 5
+        description: 도메인 아이디
+      domainNm:
+        type: string
+        example: 'Fixed Phone'
+        description: 도메인 이름
+  CreateOrder:
+    type: object
+    required:
+      - operationId
+      - custInfo
+      - schedAt
+    properties:
+      operationId:
+        type: string
+        example: 'new_conn'
+        description: |
+          오더 오퍼레이션 아이디
+          Col : VARCHAR2(15)
+      stateId:
+        type: string
+        example: 'created'
+        description: |
+          오더 State 아이디
+          Col : VARCHAR2(15)
+      custInfo:
+        $ref: '#/definitions/CreateUpdateCustomerInfo'
+      prodInfo:
+        $ref: '#/definitions/CreateProductInfo'
+      schedAt:
+        type: string
+        example: '2018-08-01T00:00:00+0900'
+        description: 오더 처리 완료 예정 날짜
+        format: DateTime
+      orders:
+        type: array
+        items:
+          $ref: '#/definitions/CreateSuborder'
+  CreateUpdateCustomerInfo:
+    description: 고객 정보
+    required: 
+      - name
+      - contactNum
+    properties:
+      name:
+        type: string
+        example: ДООСМАА НАМЖИЛСYРЭНГИЙН
+        description: |
+          고객 이름
+          Col : VARCHAR2(180)
+      contactNum:
+        type: string
+        example: '77430001'
+        description: |
+          고객 연락처
+          Col : VARCHAR2(300)
+      custId:
+        type: string
+        example: '1'
+        description: |
+          고객 아이디
+          Col : VARCHAR2(15)
+      personalId:
+        type: string
+        example: '1'
+        description: |
+          고객 등록식별번호
+          Col : VARCHAR2(15)
+      addNum:
+        type: integer
+        example: 1
+        description: |
+          고객 주소 번호
+          Col : NUMBER(8)
+      offclAddr:
+        type: string
+        example: 'Улаанбаатар Багануур horoo-1 horoolol-1 2-1 shangrila'
+        description: |
+          고객 공식 주소
+          Col : VARCHAR2(600)
+      unoffclAddr:
+        type: string
+        example: 'Улаанбаатар Багануур horoo-1 horoolol-1 2-1 shangrila'
+        description: |
+          고객 비공식 주소
+          Col : VARCHAR2(600)
+  CreateProductInfo:
+    type: object
+    description: 가입 상품 정보
+    required:
+      - prodId
+      - prodNm
+    properties:
+      prodId:
+        type: string
+        example: 'double_adsl_ngn'
+        description: 상품 아이디
+      prodNm:
+        type: string
+        example: 'Double ADSL NGN'
+        description: 상품 이름
+  CreateSuborder:
+    type: object
+    required:
+      - subdomain
+      - addNum
+      - offclInstallAddr
+      - unoffclInstallAddr
+    properties:
+      subdomainId:
+        type: integer
+        example: 501
+        description: |
+          서브도메인 아이디
+          Col : NUMBER(5)
+      newPhoneNo:
+        type: string
+        example: '77430002'
+        description: |
+          (Fixed Phone만 해당) 변경할 새 번호
+          Col : VARCHAR2(36)
+      addNum : 
+        type: integer
+        example: 1
+        description: |
+          
+      offclInstallAddr:
+        type: string
+        example: 'Улаанбаатар Багануур horoo-1 horoolol-1 2-1 shangrila'
+        description: |
+          공식 설치 주소
+          Col : VARCHAR2(600)
+      unoffclInstallAddr:
+        type: string
+        example: 'Улаанбаатар Багануур horoo-1 horoolol-1 2-1 shangrila'
+        description: |
+          비공식 설치 주소
+          Col : VARCHAR2(600)
+  Order:
+    type: object
+    required:
+      - id
+      - stateInfo
+      - custInfo
+      - schedAt
+      - orders
+      - history
+    properties:
+      id : 
+        type: string
+        example: '1'
+        description: '오더 아이디'
+      operationId:
+        type: string
+        example: 'new_conn'
+        description:  '오더 오퍼레이션 아이디'
+      stateId:
+        type: string
+        example: 'created'
+        description: 오더 현재 State 아이디
+      stateInfo:
+        $ref: '#/definitions/StateInfo'
+      custInfo:
+        $ref: '#/definitions/CustomerInfo'
+      prodInfo:
+        $ref: '#/definitions/ProductInfo'
+      assignee:
+        type: string
+        example: 'staff_1'
+        description: 오더 현재 담당 직원 아이디
+      schedAt:
+        type: string
+        example: '2018-08-01T00:00:00+0900'
+        description: 오더 완료 예정 날짜
+        format: DateTime
+      crteAt:
+        type: string
+        example: 'new_conn'
+        description: 오더 생성 날짜
+        format: DateTime
+      orders:
+        type: array
+        items:
+          $ref: '#/definitions/Suborder'
+      history:
+        type: array
+        items:
+          $ref: '#/definitions/OrderHistory'
+  StateInfo:
+    type: object
+    required:
+      - linkedOps
+    properties:
+      currStateNm:
+        type: string
+        example: 'Created'
+        description: 현재 State 이름
+      nextStateNm:
+        type: string
+        example: 'Finished'
+        description: 다음 State 이름
+      linkedOps:
+        type: array
+        items:
+          $ref: '#/definitions/LinkedOperationsInfo'
+  LinkedOperationsInfo:
+    type: object
+    required:
+      - opName
+      - opUrl
+    properties:
+      opName:
+        type: string
+        example: 'Subscription'
+        description: 연동 작업 이름
+      opUrl:
+        type: string
+        example: '/pop/up/link/subscription'
+        description: 해당 작업을 수행하는 팝업창 URL
+  Suborder:
+    type: object
+    required:
+      - orderSeqno
+      - progress
+    properties:
+      orderSeqno:
+        type: string
+        example: '1'
+        description: 서브오더 아이디
+      subdomainId:
+        type: integer
+        example: 501
+        description: 서브도메인 아이디
+      subdomainNm:
+        type: string
+        example: 'ADSL'
+        description: 서브도메인 이름
+      domainNm:
+        type: string
+        example: 'Fixed Phone'
+        description: 도메인 이름
+      newPhoneNo:
+        type: string
+        example: '77430002'
+        description: (Fixed Phone만 해당) 변경할 새 번호
+      addNum:
+        type: integer
+        example: 1
+        description: 주소 번호
+      offclInstallAddr:
+        type: string
+        example: 'Улаанбаатар Багануур horoo-1 horoolol-1 2-1 '
+        description: 서브도메인 공식 설치 주소
+      unoffclInstallAddr:
+        type: string
+        example: 'Улаанбаатар Багануур horoo-1 horoolol-1 2-1 '
+        description: 서브도메인 비공식 설치 주소
+      progress:
+        type: array
+        items:
+          $ref: '#/definitions/SuborderProgress'
+  SuborderProgress:
+    type: object
+    required:
+      - seqno
+      - stateNm
+      - assignee
+      - updtAt
+      - crteAt
+    properties:
+      seqno:
+        type: integer
+        example: 1
+        description: 오브젝트 순서
+      stateNm:
+        type: string
+        example: 'ICNC'
+        description: State 이름
+      result:
+        type: string
+        example: 'N'
+        description: |
+          진행 결과
+          S = 성공(Pass)
+          F = 실패(Fail)
+          N = 처리 중(Processing)
+        enum:
+        - N
+        - S
+        - F
+      reason:
+        type: string
+        example: 'Customer Request'
+        description: 결과 사유
+      assignee:
+        type: string
+        example: 'staff_1'
+        description: 해당 State 마지막 담당 스태프
+      updtAt:
+        type: string
+        example: '2018-08-01T00:00:00+0900'
+        description: 최근 업데이트 날짜
+        format: DateTime
+      crteAt:
+        type: string
+        example: '2018-08-01T00:00:00+0900'
+        description: 생성 날짜
+        format: DateTime
+      field:
+        type: object
+        description: 각 State별 입력 필드 존재
+  OrderHistory:
+    type: object
+    required:
+      - histSeqno
+    properties:
+      histSeqno:
+        type: integer
+        example: 1
+        description: 오더 히스토리 시퀀스
+      stateNm:
+        type: string
+        example: 'Created'
+        description: 오더 State 이름
+      assignee:
+        type: string
+        example: 'Created'
+        description: 오더 담당 스태프
+      crteAt:
+        type: string
+        example: '2018-08-01T00:00:00+0900'
+        description: 생성 날짜
+        format: DateTime
+  UpdateOrder:
+    type: object
+    properties:
+      operationId:
+        type: string
+        example: 'new_conn'
+        description:  |
+          오더 오퍼레이션 아이디  
+          Col : VARCHAR2(15)
+      custInfo:
+          $ref: '#/definitions/CreateUpdateCustomerInfo'
+      prodInfo:
+        $ref: '#/definitions/ProductInfo'
+      schedAt:
+        type: string
+        example: '2018-08-01T00:00:00+0900'
+        description: 오더 완료 예정 날짜
+        format: DateTime
+      orders:
+        type: array
+        items:
+          $ref: '#/definitions/UpdateSuborder'
+  UpdateSuborder:
+    type: object
+    required:
+      - progress
+    properties:
+      orderSeqno:
+        type: string
+        example: '1'
+        description: |
+          서브오더 아이디
+          Col :  NUMBER(10)
+      subdomainId:
+        type: integer
+        example: 501
+        description: |
+          서브도메인 아이디
+          Col : NUMBER(5)
+      newPhoneNo:
+        type: string
+        example: '77430002'
+        description: |
+          (Fixed Phone만 해당) 변경할 새 번호
+          Col : VARCHAR2(36)
+      addNum:
+        type: integer
+        example: 1
+        description: |
+          주소 번호
+          Col : NUMBER(8)
+      offclInstallAddr:
+        type: string
+        example: 'Улаанбаатар Багануур horoo-1 horoolol-1 2-1 '
+        description: |
+          서브도메인 공식 설치 주소
+          Col : VARCHAR2(600)
+      unoffclInstallAddr:
+        type: string
+        example: 'Улаанбаатар Багануур horoo-1 horoolol-1 2-1 '
+        description: |
+          서브도메인 비공식 설치 주소
+          Col : VARCHAR2(600)
+      progress:
+        type: array
+        items:
+          $ref: '#/definitions/SuborderProgress'
+  UpdateState:
+    type: object
+    required:
+      - action 
+    properties:
+      action:
+        type: string
+        example: 'cancel'
+        description: |
+          State 관련 수행할 동작
+          transfer = 다음 State로 이동
+          cancel = 오더 취소 (이 경우 reason 기입 필요)
+        enum:
+        - transfer
+        - cancel
+      reason:
+        type: string
+        example: 'Customer Request'
+        description: |
+          오더 취소 사유
+          Col : VARCHAR2(300)
+  UpdateAssignee:
+    type: object
+    required:
+      - assignee
+    properties:
+      assignee:
+        type: string
+        example: 'staff_1'
+        description: |
+          오더 담당할 직원 아이디
+          Col : VARCHAR2(30)
+  UpdateCustomer:
+    type: object
+    properties:
+      name:
+        type: string
+        example: ДООСМАА НАМЖИЛСYРЭНГИЙН
+        description: |
+          고객 이름
+          Col : VARCHAR2(180)
+      contactNum:
+        type: string
+        example: '77430001'
+        description: |
+          고객 연락처
+          Col : VARCHAR2(300)
+      custId:
+        type: string
+        example: '1'
+        description: |
+          고객 아이디
+          Col :  VARCHAR2(15)
+      personalId:
+        type: string
+        example: '1'
+        description: |
+          고객 등록식별번호
+          Col :  VARCHAR2(15)
+      addNum:
+        type: integer
+        example: 1
+        description: |
+          고객 주소 번호
+          Col : NUMBER(8)
+      offclAddr:
+        type: string
+        example: 'Улаанбаатар Багануур horoo-1 horoolol-1 2-1 shangrila'
+        description: |
+          고객 공식 주소
+          Col : VARCHAR2(600)
+      unoffclAddr:
+        type: string
+        example: 'Улаанбаатар Багануур horoo-1 horoolol-1 2-1 shangrila'
+        description: |
+          고객 비공식 주소
+          Col : VARCHAR2(600)
+  WorkflowTemplateList:
+    type: object
+    required: 
+      - templateId
+      - templateNm
+    properties:
+      templateId:
+        type: string
+        example: 'template_1'
+        description: 템플릿 아이디
+      templateNm:
+        type: string
+        example: 'Template 1'
+        description: 템플릿 이름
+      desc:
+        type: string
+        example: 'First Template'
+        description: 템플릿 설명
+      operatorId:
+        type: string
+        example: 'staff_1'
+        description: 템플릿 최근 작업한 직원 아이디
+      updtAt:
+        type: string
+        example: '2018-08-01T00:00:00+0900'
+        description: 템플릿 최근 업데이트 날짜
+        format: DateTime
+      crteAt:
+        type: string
+        example: '2018-08-01T00:00:00+0900'
+        description: 템플릿 생성 날짜
+        format: DateTime
+  WorkflowTemplate:
+    type: object
+    required:
+      - templateId
+      - templateNm
+      - steps
+    properties:
+      templateId:
+        type: string
+        example: 'template_1'
+        description: 템플릿 아이디
+      templateNm:
+        type: string
+        example: 'Template 1'
+        description: 템플릿 이름
+      desc:
+        type: string
+        example: 'First Template'
+        description: 템플릿 설명
+      operatorId:
+        type: string
+        example: 'staff_1'
+        description: 템플릿 최근 작업한 직원 아이디
+      updtAt:
+        type: string
+        example: '2018-08-01T00:00:00+0900'
+        description: 템플릿 최근 업데이트 날짜
+        format: DateTime
+      crteAt:
+        type: string
+        example: '2018-08-01T00:00:00+0900'
+        description: 템플릿 생성 날짜
+        format: DateTime
+      steps:
+        type: array
+        items:
+          $ref: '#/definitions/WorkflowTemplateStep'
+  WorkflowTemplateStep:
+    type: object
+    required:
+      - seqno
+      - stateId
+      - stateNm
+      - linkedOps
+    properties:
+      seqno:
+        type: integer
+        example: 1
+        description: 템플릿 스텝 시퀀스
+      stateId:
+        type: string
+        example: 'created'
+        description: State 아이디
+      templateNm:
+        type: string
+        example: 'Created'
+        description: State 이름
+      desc:
+        type: string
+        example: 'Order is created'
+        description: 현재 스텝 설명
+      assignee:
+        type: string
+        example: 'group_1'
+        description: 해당 스텝으로 이동 시에 자동으로 오더 할당받을 그룹 아이디
+      notiYn:
+        type: string
+        example: 'N'
+        description: |
+          Only Notification 여부
+        enum:
+        - Y
+        - N
+      linkedOps:
+        type: array
+        items:
+          $ref: '#/definitions/LinkedOperationsInfo'
+  Login:
+    type: object
+    required:
+      - user
+      - password
+    properties:
+      user:
+        type: string
+      password:
+        type: string
+  Refresh:
+    type: object
+    required:
+      - refresh_token
+    properties:
+      refresh_token:
+        type: string
+  LoginResponse:
+    type: object
+    required:
+      - code
+    properties:
+      code:
+        type: integer
+      error:
+        type: string
+      result: 
+        type: object
+        properties:
+          token_type: 
+            type: string
+            example: "Bearer"
+          access_token :
+            type: string
+            example: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+          access_token_expires_in:
+            type: integer
+            example: 1800
+          refresh_token : 
+            type: string
+          refresh_token_expires_in:
+            type: integer
+            example: 14400
+  ResultSuccess:
+    type: object
+    required: 
+      - code
+      - desc
+    properties:
+      code :
+        type: integer
+        example: 0
+        description: 응답 코드
+      desc :
+        type: string
+        example: Ok
+        description: 코드 부연 설명
+
+  UserInfo:
+    type: object
+    properties:
+      userId :
+        type: string
+        example: "user1"
+        description: user id
+      userPw :
+        type: string
+        example: "password"
+        description: user password
+      userName:
+        type: string
+        example: "Staff name"
+      phoneNo:
+        type: string
+        example: "70111234"
+      status:
+        type: string
+        example: "A"
+        description: "A: Active"
+      roleId:
+        type: string
+        example: "100,101"
+      grpId:
+        type: string
+        example: 100
+  
+  GroupInfo:
+    type: object
+    properties:
+      grpId :
+        type: string
+        example: "100000"
+        description: group id
+      grpName:
+        type: string
+        example: "MTC Billing"
+      status:
+        type: string
+        example: "A"
+        description: "A: Active"
+      upperGrpId:
+        type: string
+        example: "100001"
+        description: 상위 그룹 ID
+        
+  ResultFail:
+    type: object
+    required: 
+      - code
+      - desc
+    properties:
+      code :
+        type: integer
+        example: -1004
+        description: 응답 코드
+      desc :
+        type: string
+        example: 'DB_ACCESS_FAILED'
+        description: 코드 부연 설명
+      error:
+        type: string
+        example: 'Order Not Found (Id=522)'
+        description: 에러 사유
+schemes:
+ - https
+ - http
